@@ -212,6 +212,18 @@ function sbwc_dist_jq_ui_css()
         .sbwc-dist-accordion-oc {
             float: right;
         }
+
+        @media screen and (max-width: 428px) {
+            .sbwc-dist-data-table th {
+                width: 191px;
+            }
+        }
+
+        @media screen and (max-width: 375px) {
+            .sbwc-dist-data-table td {
+                word-wrap: anywhere;
+            }
+        }
     </style>
 <?php }
 
