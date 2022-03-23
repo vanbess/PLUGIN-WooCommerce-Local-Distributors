@@ -108,13 +108,13 @@ function sbwc_loc_dist_display()
 
                                 <!-- store name/title -->
                                 <tr>
-                                    <th>Store/Distributor Name</th>
+                                    <th><?php _e('Store/Distributor Name', 'sbwc-dists'); ?></th>
                                     <td><b><?php echo get_the_title($did); ?></b></td>
                                 </tr>
 
                                 <!-- address line 1 -->
                                 <tr>
-                                    <th>Address</th>
+                                    <th><?php _e('Address', 'sbwc-dists'); ?></th>
                                     <td>
                                         <?php echo $addr_line_1; ?><br>
                                         <?php echo $addr_line_2 !== '-' ? $addr_line_2 . '<br>' : ''; ?>
@@ -125,13 +125,13 @@ function sbwc_loc_dist_display()
 
                                 <!-- telephone -->
                                 <tr>
-                                    <th>Tel</th>
+                                    <th><?php _e('Tel', 'sbwc-dists'); ?></th>
                                     <td><?php echo $tel; ?></td>
                                 </tr>
 
                                 <!-- email address -->
                                 <tr>
-                                    <th>Email</th>
+                                    <th><?php _e('Email', 'sbwc-dists'); ?></th>
                                     <td><?php echo $email; ?></td>
                                 </tr>
                             </table>
