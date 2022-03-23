@@ -2,7 +2,7 @@
 
 /**
  * Plugin Name: SBWC Local Distributors
- * Description: Add and edit local product distributors. Display on any page by shortcode.
+ * Description: Add and edit local product distributors via custom post type. Display on any page by shortcode. Use <strong>[sbwc_loc_dist_sc]</strong> in page editor to display on page of your choice.
  * Version: 1.0.0
  * Author: WC Bessinger
  * Text Domain: sbwc-dists
@@ -32,7 +32,7 @@ function sbwc_loc_dist_init()
     if (!class_exists('WooCommerce')) :
         return;
     endif;
-    
+
     // cpt
     include LOC_DIST_PATH . 'functions/cpt.php';
 
