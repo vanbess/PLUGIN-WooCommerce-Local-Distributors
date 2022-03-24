@@ -76,7 +76,34 @@ function sbwc_loc_dist_display()
                     $(this).find('.sbwc-dist-accordion-oc').text('-');
                 }
 
-                $(this).parent().scrollTop();
+            });
+
+            // province/state filter
+            $('.prov-filter').val('');
+            $('.prov-filter').on('change', function() {
+
+                var selected = $(this).val();
+                var parent = $(this).parents('.sbwc-dist-accordion-content');
+                var err = parent.find('.sbwc-dists-no-dists');
+
+                // loop to hide/show tables based on selected filter
+                $('.sbwc-dist-data-table-cont', parent).each(function(index, element) {
+
+                    var table_ps = $(this).data('sp');
+
+                    if (table_ps === selected || selected === 'all' || selected === '') {
+                        $(this).show();
+                    } else if (table_ps !== selected) {
+                        $(this).hide();
+                    }
+                });
+
+                // hide/show error message
+                if ($('.sbwc-dist-data-table-cont', parent).is(':visible')) {
+                    err.hide();
+                } else {
+                    err.show();
+                }
 
             });
         });
@@ -91,6 +118,33 @@ function sbwc_loc_dist_display()
                 <h3 class="sbwc-dist-accordion-title"><?php echo $c_list[$country]; ?><span class="sbwc-dist-accordion-oc">+</span></h3>
 
                 <div class="sbwc-dist-accordion-content" style="display: none;">
+
+                    <?php
+                    // display state/province filter if provinces/states present for country
+                    $country_ps = $p_list[$country];
+
+                    if (is_array($country_ps) && !empty($country_ps)) : ?>
+
+                        <div class="sbwc-dist-filters-cont">
+
+                            <!-- province dd -->
+                            <label class="prov-filter-label" for="prov-filter"><?php _e('Filter by province/state: ', 'sbwc-dists'); ?></label>
+                            <select class="prov-filter">
+                                <option value=""><?php _e('please select', 'sbwc-dists'); ?></option>
+                                <option value="all"><?php _e('Show All', 'sbwc-dists'); ?></option>
+                                <?php foreach ($country_ps as $pskey => $psname) : ?>
+                                    <option value="<?php echo trim($pskey); ?>"><?php echo $psname; ?></option>
+                                <?php endforeach; ?>
+                            </select>
+
+                        </div>
+                    <?php endif; ?>
+
+                    <!-- no dists message -->
+                    <div class="sbwc-dists-no-dists" style="display: none;" data-sp="<?php echo base64_encode(json_encode(array_keys($country_ps))) ?>">
+                        <p><?php _e('There are currently no distributors/retailers available in this province/state.', 'sbwc-dists'); ?></p>
+                    </div>
+
                     <?php foreach ($dist_ids as $did) :
 
                         // retrieve post meta
@@ -102,7 +156,7 @@ function sbwc_loc_dist_display()
                         $email       = get_post_meta($did, 'email', true) ? get_post_meta($did, 'email', true) : '-';
 
                     ?>
-                        <div class="sbwc-dist-data-table-cont">
+                        <div class="sbwc-dist-data-table-cont" data-sp="<?php echo trim($province); ?>">
 
                             <table class="sbwc-dist-data-table">
 
@@ -213,9 +267,36 @@ function sbwc_dist_jq_ui_css()
             float: right;
         }
 
+        .prov-filter-label {
+            display: inline-block;
+            position: relative;
+            bottom: 7px;
+            text-decoration: underline;
+            font-size: 15px;
+        }
+
+        .prov-filter {
+            display: inline-block;
+            width: auto;
+            font-size: 14px;
+            position: relative;
+            left: 10px;
+        }
+
         @media screen and (max-width: 428px) {
             .sbwc-dist-data-table th {
                 width: 191px;
+            }
+
+            .prov-filter-label {
+                display: block;
+                text-align: center;
+            }
+
+            .prov-filter {
+                display: block;
+                width: 100%;
+                left: 0px;
             }
         }
 
