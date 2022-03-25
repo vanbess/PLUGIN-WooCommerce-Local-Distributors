@@ -20,6 +20,7 @@ function sbwc_cpt_render_dist_data()
     $provinces = $country_data->get_states();
 
     // retrieve post meta
+    $logo        = get_post_meta($post_id, 'logo', true);
     $addr_line_1 = get_post_meta($post_id, 'addr_line_1', true);
     $addr_line_2 = get_post_meta($post_id, 'addr_line_2', true);
     $country     = get_post_meta($post_id, 'country', true);
@@ -27,9 +28,24 @@ function sbwc_cpt_render_dist_data()
     $city        = get_post_meta($post_id, 'city', true);
     $tel         = get_post_meta($post_id, 'tel', true);
     $email       = get_post_meta($post_id, 'email', true);
+
 ?>
 
     <div id="sbwc_dist_data_mbox_cont">
+
+        <!-- image/logo -->
+        <div id="sbwc_dist_logo_cont">
+
+            <p><b><i><?php _e('Distributor/Retailer logo', 'sbwc-dists'); ?></i></b></p>
+
+            <?php if ($logo) : ?>
+                <img src="<?php echo $logo; ?>" alt="">
+            <?php endif; ?>
+
+
+            <input type="file" name="logo">
+
+        </div>
 
         <!-- address -->
         <div id="sbwc_dist_address_cont">
@@ -113,6 +129,9 @@ function sbwc_loc_dist_admin_js()
 
         $(document).ready(function() {
 
+            // add file support to form
+            $('#post').attr('enctype', 'multipart/form-data');
+
             // if post meta is present for dropdowns, set dropdown vals
             $('#dist-country-select').val($('#dist-country-select').data('country'));
 
@@ -165,9 +184,28 @@ function sbwc_loc_dist_admin_js()
 function sbwc_dist_cpt_save_data($post_id)
 {
 
+    // file_put_contents(LOC_DIST_PATH . 'posted.txt', print_r($_POST, true));
+    // file_put_contents(LOC_DIST_PATH . 'img.txt', print_r($_FILES, true));
+
+
     // check post type and bail if not distributer
     if (get_post_type($post_id) !== 'distributor') :
         return;
+    endif;
+
+    // upload logo file
+    $target_dir_data = wp_upload_dir();
+    $target_dir      = trailingslashit($target_dir_data['path']);
+    $target_url      = trailingslashit($target_dir_data['url']);
+    $target_file     = $target_dir . basename($_FILES["logo"]["name"]);
+    $target_file_src = $target_url . $_FILES["logo"]["name"];
+
+    $moved = move_uploaded_file($_FILES['logo']['tmp_name'], $target_file);
+
+    if ($moved) :
+        update_post_meta($post_id, 'logo', $target_file_src);
+    elseif (!$moved) :
+        update_post_meta($post_id, 'logo', $moved);
     endif;
 
     // save post meta
@@ -193,6 +231,18 @@ function sbwc_loc_dist_admin_css()
         #sbwc_dist_data_mbox_cont input,
         #sbwc_dist_data_mbox_cont select {
             width: 350px;
+        }
+
+        #sbwc_dist_logo_cont {
+            max-width: 317px;
+            padding-top: 6px;
+        }
+
+        #sbwc_dist_logo_cont>img {
+            width: 100%;
+            border: 1px solid #ddd;
+            padding: 15px;
+            border-radius: 3px;
         }
     </style>
 <?php }

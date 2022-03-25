@@ -148,6 +148,7 @@ function sbwc_loc_dist_display()
                     <?php foreach ($dist_ids as $did) :
 
                         // retrieve post meta
+                        $logo        = get_post_meta($did, 'logo', true) ? get_post_meta($did, 'logo', true) : '-';
                         $addr_line_1 = get_post_meta($did, 'addr_line_1', true) ? get_post_meta($did, 'addr_line_1', true) : '-';
                         $addr_line_2 = get_post_meta($did, 'addr_line_2', true) ? get_post_meta($did, 'addr_line_2', true) : '-';
                         $province    = get_post_meta($did, 'province', true) ? get_post_meta($did, 'province', true) : '-';
@@ -163,7 +164,14 @@ function sbwc_loc_dist_display()
                                 <!-- store name/title -->
                                 <tr>
                                     <th><?php _e('Store/Distributor Name', 'sbwc-dists'); ?></th>
-                                    <td><b><?php echo get_the_title($did); ?></b></td>
+                                    <td>
+                                        <div class="sbwc-dist-data-table-logo-cont">
+                                            <?php if ($logo !== '-') : ?>
+                                                <img class="sbwc-dist-data-table-logo" src="<?php echo $logo; ?>" alt="<?php echo get_the_title($did); ?>">
+                                            <?php endif; ?>
+                                        </div>
+                                        <b><?php echo get_the_title($did); ?></b>
+                                    </td>
                                 </tr>
 
                                 <!-- address line 1 -->
@@ -243,6 +251,7 @@ function sbwc_dist_jq_ui_css()
 
         .sbwc-dist-data-table td {
             padding-left: 15px;
+            word-wrap: anywhere;
         }
 
         .sbwc-dist-accordion-title {
@@ -283,6 +292,17 @@ function sbwc_dist_jq_ui_css()
             left: 10px;
         }
 
+        .sbwc-dist-data-table-logo-cont {
+            width: 150px;
+            padding-top: 7px;
+        }
+
+        .sbwc-dist-data-table-logo {
+            border: 1px solid #ededed;
+            margin-bottom: 8px;
+        }
+
+
         @media screen and (max-width: 428px) {
             .sbwc-dist-data-table th {
                 width: 191px;
@@ -298,11 +318,39 @@ function sbwc_dist_jq_ui_css()
                 width: 100%;
                 left: 0px;
             }
+
+            .sbwc-dist-data-table-logo-cont {
+                width: 176px;
+            }
+        }
+
+        @media screen and (max-width: 414px) {
+            .sbwc-dist-data-table-logo-cont {
+                width: 161px;
+            }
+        }
+
+        @media screen and (max-width: 390px) {
+            .sbwc-dist-data-table-logo-cont {
+                width: 138px;
+            }
+        }
+
+        @media screen and (max-width: 384px) {
+            .sbwc-dist-data-table-logo-cont {
+                width: 132px;
+            }
         }
 
         @media screen and (max-width: 375px) {
-            .sbwc-dist-data-table td {
-                word-wrap: anywhere;
+            .sbwc-dist-data-table-logo-cont {
+                width: 123px;
+            }
+        }
+
+        @media screen and (max-width: 360px) {
+            .sbwc-dist-data-table-logo-cont {
+                width: 108px;
             }
         }
     </style>
